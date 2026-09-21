@@ -1,1 +1,75 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ネットワークの構成 LAB｜LANとWANをつないでみよう</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="header-title"><span class="tag">情報Ⅰ</span><div><h1>ネットワークの構成 LAB</h1><p>自分で機器を組み合わせて、LANからWANへデータが届く道をつくろう</p></div></div>
+  <button id="resetBtn" class="ghost-btn">↻ 最初から</button>
+</header>
+<main>
+  <section class="goal card"><b>本時の目標</b><span>LANとWANの違い、ハブ・アクセスポイント・ルータの役割を、実際の通信経路と結び付けて説明できる。</span></section>
 
+  <section class="guide card">
+    <b>使い方</b>
+    <span><em>1</em> 左右どちらのLANに置くか選ぶ</span><span>→</span>
+    <span><em>2</em> 機器を追加する</span><span>→</span>
+    <span><em>3</em> 2つの機器を順番にクリックして接続</span><span>→</span>
+    <span><em>4</em> 送信元・送信先を選んで通信</span>
+  </section>
+
+  <section class="workspace">
+    <aside class="palette card">
+      <h2>機器を配置</h2>
+      <p>配置先を選んでから機器を追加します。</p>
+      <div class="side-switch">
+        <button class="side active" data-side="home">🏠 家庭LAN</button>
+        <button class="side" data-side="school">🏫 学校LAN</button>
+      </div>
+      <button class="device-btn" data-type="pc"><span class="device-icon">💻</span><span><b>PC</b><small>有線でLANに参加</small></span></button>
+      <button class="device-btn" data-type="phone"><span class="device-icon">📱</span><span><b>スマホ</b><small>Wi-FiでLANに参加</small></span></button>
+      <button class="device-btn" data-type="hub"><span class="device-icon">🔀</span><span><b>ハブ</b><small>同じLANの有線機器をまとめる</small></span></button>
+      <button class="device-btn" data-type="ap"><span class="device-icon">📡</span><span><b>アクセスポイント</b><small>無線端末をLANへ橋渡し</small></span></button>
+      <button class="device-btn" data-type="router"><span class="device-icon">📦</span><span><b>ルータ</b><small>異なるネットワークを中継</small></span></button>
+      <div class="mini-help"><b>ヒントではなく「役割」</b><p>機器をクリックすると、下の「機器の役割」で説明を確認できます。自由に組み合わせて試してください。</p></div>
+    </aside>
+
+    <section class="lab card">
+      <div class="lab-head"><div><h2>ネットワークを組み立てる</h2><p>機器はドラッグして移動できます。線をクリックすると接続を削除できます。</p></div><button id="connectMode" class="mode-btn">🔗 接続モード：ON</button></div>
+      <div id="canvas">
+        <div class="zone home-zone"><strong>🏠 家庭LAN</strong><span>家の中など、限られた範囲</span></div>
+        <div class="zone wan-zone"><strong>☁ WAN / Internet</strong><span>離れたLAN同士をつなぐ</span></div>
+        <div class="zone school-zone"><strong>🏫 学校LAN</strong><span>校内など、限られた範囲</span></div>
+        <div id="wanCloud" class="wan-cloud fixed-node" data-id="wan">☁<b>WAN</b><small>広域ネットワーク</small></div>
+        <svg id="links" aria-label="ネットワーク接続線"></svg>
+        <div id="devices"></div>
+      </div>
+
+      <div class="communication-panel">
+        <div class="selectors"><label>送信元<select id="fromSelect"><option value="">端末を選択</option></select></label><span class="arrow">→</span><label>送信先<select id="toSelect"><option value="">端末を選択</option></select></label><button id="sendBtn">▶ 通信開始</button></div>
+        <div id="status" class="status neutral"><b>準備中：</b>機器を配置して、家庭LANと学校LANをWANでつないでみよう。</div>
+        <div id="routeView" class="route-view"><span>通信経路：</span><div id="routeChips"><i>まだ通信していません</i></div></div>
+      </div>
+    </section>
+  </section>
+
+  <section class="bottom-grid">
+    <article class="card roles">
+      <h2>機器の役割</h2>
+      <div id="roleDetail" class="role-detail"><span class="big-icon">🔀</span><div><b>ハブ（スイッチ）</b><p>同じLAN内の複数の有線機器をつなぐ「分岐点」です。LANの外へ出るための機器ではありません。</p></div></div>
+      <div class="role-tabs"><button data-role="hub" class="active">🔀 ハブ</button><button data-role="ap">📡 AP</button><button data-role="router">📦 ルータ</button><button data-role="wan">☁ WAN</button></div>
+    </article>
+    <article class="card flow">
+      <h2>通信の流れ</h2>
+      <div id="flowSteps"><p data-step="0"><b>1</b> 送信元の端末からデータを送る</p><p data-step="1"><b>2</b> LAN内の機器を通る</p><p data-step="2"><b>3</b> ルータからLANの外へ出る</p><p data-step="3"><b>4</b> WANを通って相手側のルータへ</p><p data-step="4"><b>5</b> 相手のLANを通って送信先へ届く</p></div>
+    </article>
+  </section>
+</main>
+<footer>Network Composition Lab — 情報Ⅰ / HTML・CSS・JavaScriptのみ / GitHub Pages対応</footer>
+<script src="script.js"></script>
+</body>
+</html>
